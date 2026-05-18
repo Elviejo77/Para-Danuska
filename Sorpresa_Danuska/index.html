@@ -1,0 +1,839 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Para Danuska</title>
+
+<style>
+/* =========================================
+   ESTILOS GENERALES
+========================================= */
+body {
+    margin: 0;
+    background: black;
+    color: white;
+    font-family: 'Segoe UI', sans-serif;
+    overflow: hidden;
+}
+
+canvas {
+    position: absolute;
+    pointer-events: none;
+    z-index: 0;
+}
+
+button {
+    padding: 12px 30px;
+    font-size: 16px;
+    background: transparent;
+    color: #00d9ff;
+    border: 2px solid #00d9ff;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+/* =========================================
+   CONTENIDO PRINCIPAL
+========================================= */
+.contenido {
+    position: absolute;
+    width: 100%;
+    top: 12%;
+    text-align: center;
+    z-index: 2;
+}
+
+.titulo {
+    font-size: 2.5em;
+    color: #00d9ff;
+    text-shadow: 0 0 15px #00d9ff;
+    transform: translateY(-25px);
+}
+
+.mensaje {
+    margin-top: 25px;
+    width: 60%;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.6;
+    font-size: 15px;
+}
+
+/* =========================================
+   DIPLOMA
+========================================= */
+.diploma {
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    width: 50%;
+    max-width: 500px;
+    background: #fdf6e3;
+    color: black;
+    padding: 25px;
+    border-radius: 12px;
+    border: 6px double #b89b5e;
+    text-align: center;
+    opacity: 0;
+    transition: 0.6s;
+    z-index: 3;
+}
+
+.diploma.activo {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+}
+
+.cerrar {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    cursor: pointer;
+}
+
+/* =========================================
+   ICONOS
+========================================= */
+.icono {
+    position: fixed;
+    font-size: 26px;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: 0.3s;
+    z-index: 10;
+}
+
+.icono:hover {
+    opacity: 1;
+    transform: scale(1.2);
+}
+
+/* =========================================
+   POPUP / CARTA
+========================================= */
+.popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    
+    width: 90%;
+    max-width: 1100px;
+    max-height: 85vh;
+
+    background: rgba(0,0,0,0.95);
+    color: white;
+    padding: 35px 40px 30px 30px;
+    border-radius: 12px;
+
+    display: none;
+    z-index: 9999;
+
+    box-shadow: 0 0 20px rgba(0,217,255,0.6);
+
+    overflow-y: auto;
+    text-align: left;
+    line-height: 1.7;
+    font-size: 16px;
+}
+
+#contenidoPopup {
+    white-space: pre-line;
+}
+
+#cerrarPopup {
+    position: sticky;
+    top: 0;
+    float: right;
+    cursor: pointer;
+    font-size: 20px;
+    padding-left: 10px;
+    color: white;
+    z-index: 10000;
+}
+
+/* =========================================
+   FIRMA SECRETA
+========================================= */
+#firma {
+    position: fixed;
+    bottom: 10px;
+    right: 15px;
+
+    font-size: 21px;
+    font-style: italic;
+    letter-spacing: 1px;
+    font-family: "Brush Script MT", cursive;
+
+    color: rgba(255, 255, 255, 0.40);
+
+    cursor: pointer;
+    transition: 0.3s;
+    z-index: 20;
+}
+
+#firma:hover {
+    color: rgba(0, 217, 255, 0.85);
+}
+</style>
+</head>
+
+<body>
+
+<!-- =========================================
+     FONDO
+========================================= -->
+<canvas id="canvas"></canvas>
+
+<!-- =========================================
+     CONTENIDO PRINCIPAL
+========================================= -->
+<div class="contenido">
+    <div class="titulo">Para Danuska ✨</div>
+
+    <div class="mensaje">
+        Danuska, me alegra mucho saber que lo lograste.<br>
+        Se nota que hay bastante esfuerzo detrás de todo esto.<br><br>
+
+        Muchos ven el resultado final,<br>
+        pero no todo lo que implica llegar hasta ahí y eso realmente tiene un valor enorme.<br><br>
+
+        Y bueno, ahora sí toca disfrutarlo, ¿no? 🎇🎆😄<br><br>
+
+        <div style="margin: 20px 0;">
+            <button onclick="abrir()">Abrir diploma</button>
+        </div>
+
+        Por cierto, estuve indagando un poco sobre curiosidades antropológicas,<br>
+        espero haber estado a la altura<br>
+        y si no, prometo que soy todo oídos para aprender un poquito más de ti 😊
+    </div>
+</div>
+
+<!-- =========================================
+     DIPLOMA
+========================================= -->
+<div class="diploma" id="diploma">
+    <div class="cerrar" onclick="cerrar()">✖️</div>
+
+    <h3>REPÚBLICA DEL PERÚ</h3>
+    <p>Universidad Nacional de San Antonio Abad del Cusco</p>
+
+    <p>Otorga el grado académico de Antropología a:</p>
+
+    <strong>Danuska Quino Rojas</strong>
+
+    <p><strong>ANTROPÓLOGA</strong></p>
+    <p><i>Exploradora de realidades humanas</i></p>
+
+    <p>Combapata - Cusco</p>
+
+    <p style="margin-top:15px; font-size:14px; font-style:italic;">
+    El joven Leonardo, sin autoridad oficial ni nada, pero con buena intención, le otorga este diploma de antropóloga.
+    </p>
+</div>
+
+<!-- =========================================
+     ICONOS
+========================================= -->
+<div class="icono" style="top:10%; left:10%;" onclick="mostrar('1')">🌹</div>
+<div class="icono" style="top:40%; left:10%;" onclick="mostrar('3')">🌻</div>
+<div class="icono" style="top:70%; left:10%;" onclick="mostrar('6')">⏰</div>
+<div class="icono" style="top:10%; right:10%;" onclick="mostrar('2')">✨</div>
+<div class="icono" style="top:40%; right:10%;" onclick="mostrar('5')">🧠</div>
+<div class="icono" style="top:70%; right:10%;" onclick="mostrar('7')">🎻</div>
+<div class="icono" style="bottom:10%; left:50%; transform:translateX(-50%);" onclick="mostrar('4')">💫</div>
+
+<!-- =========================================
+     FIRMA
+========================================= -->
+<div id="firma" onclick="firmaSecreta()">
+    Leonardito Gomez
+</div>
+
+<!-- =========================================
+     POPUP
+========================================= -->
+<div class="popup" id="popup">
+    <div id="cerrarPopup" onclick="cerrarPopup()">✖️</div>
+    <div id="contenidoPopup"></div>
+</div>
+
+<!-- =========================================
+     AUDIO
+========================================= -->
+<audio id="musica" preload="auto">
+    <source src="unstoppable.mp3" type="audio/mpeg">
+</audio>
+
+<!-- =========================================
+     JAVASCRIPT
+========================================= -->
+<script>
+/* =========================================
+   VARIABLES GLOBALES
+========================================= */
+let fireworksActivo = false;
+let lastFireworkTime = 0;
+let fadeOutActivo = null;
+let fadeInActivo = null;
+const VOLUMEN_BASE = 0.35;
+
+/* =========================================
+   SISTEMA DEL DIPLOMA
+========================================= */
+function abrir() {
+    document.getElementById("diploma").classList.add("activo");
+    fireworksActivo = true;
+}
+
+function cerrar() {
+    document.getElementById("diploma").classList.remove("activo");
+    fireworksActivo = false;
+    fireworks = [];
+}
+
+/* =========================================
+   SISTEMA DE ICONOS
+========================================= */
+function mostrar(tipo) {
+    let mensaje = "";
+
+    if (tipo === "1") mensaje = "Comprender al ser humano es aprender a mirar más allá de uno mismo.";
+    if (tipo === "2") mensaje = "En varios pueblos andinos, agosto representa un tiempo de renovación y agradecimiento a la Pachamama. Fuente: Ministerio de Cultura del Perú";
+    if (tipo === "3") mensaje = "Conocer a alguien puede ser todo un viaje, y algunos viajes lo valen mucho";
+    if (tipo === "4") mensaje = "Y en medio de todo, también está la magia de vivirlo";
+    if (tipo === "5") mensaje = "Según la Real Academia Española, la antropología es “el estudio de la realidad humana”. ¿Y hasta dónde puede llegar? Hasta donde queramos";
+    if (tipo === "6") mensaje = "Comprender el tiempo es comprender los procesos humanos.";
+    if (tipo === "7") mensaje = "La música es sin duda una de las manifestaciones artísticas más relevantes y persistentes para los pueblos Quechuas. Fuente: Ministerio de Cultura del Perú";
+
+    const popup = document.getElementById("popup");
+    const contenido = document.getElementById("contenidoPopup");
+
+    contenido.innerText = mensaje;
+    popup.style.display = "block";
+}
+
+/* =========================================
+   FIRMA SECRETA
+========================================= */
+function firmaSecreta() {
+    const musica = document.getElementById("musica");
+
+    if (musica && !musica.paused) {
+        let volumen = musica.volume;
+
+        const fadeOut = setInterval(() => {
+            volumen -= 0.01;
+
+            if (volumen <= 0) {
+                volumen = 0;
+                musica.volume = 0;
+                musica.pause();
+                clearInterval(fadeOut);
+            } else {
+                musica.volume = volumen;
+            }
+        }, 100);
+    }
+
+    const popup = document.getElementById("popup");
+    const contenido = document.getElementById("contenidoPopup");
+
+    contenido.innerText = `Si encontraste esto, es porque sabes que me gusta hacer las cosas con intención. 
+
+    —-----—
+
+    ♦ Si lo miras rápido, verás un color.
+    Si te detienes, verás un tesoro.  
+
+    La primera vez que lo vi, fue rápido  
+    y solo pude ver un color, pero aun así, ya me decía algo.  
+
+    Por eso, decidi volver a verlo,  
+    para entender qué guardaba.  
+
+    Y entendi que son como cristales que atrapan la luz
+    cuando el día los alcanza, no solo brillan,  
+    sino que reflejan todo lo que llevan dentro.  
+
+    Incluso el sol tiene la dicha de acariciarlos,  
+    solo para ver de cerca lo que otros ignoran.  
+
+    A veces cambian con la luz,  
+    otras veces dicen todo sin hablar  
+    y aun así, pueden revelar más de lo que uno espera.  
+
+    Porque en realidad, no es solo un color.  
+
+    Y lo curioso es que estuvieron frente a mí. ♦  
+
+    ¿Sabes qué es?
+
+
+    —-----—
+
+
+    Debo decir que, antes de conocerte, no tenía ni idea de lo que era la antropología.
+
+    Recuerdo que el día que me encontré con tu mamá, ella me comentó que tú eras antropóloga,
+    y yo, sinceramente, pensé que eras veterinaria. jajaja
+    Creo que incluso te lo dije aquel segundo domingo que te vi 😅
+
+    Lo dije por la naturalidad, la forma en la que me atendiste y claro, porque vendías alimentos para animales
+    y vaya que no podían ser más diferentes jaja.
+
+    Después de lo que me dijo tu mamá, me dio curiosidad y investigué un poco,
+    ya que al inicio pensaba que era algo más cercano a la historia,
+    que te abocabas desde la evolución y eso jeje… aunque bueno, supongo esa es la base.
+
+    Pero luego entendi mejor que era, cuando tú misma me lo explicaste, como diferenciando a un psicólogo que va de persona en persona,
+    el antropólogo va mucho más allá, que es comprender a una sociedad desde su entorno, su cultura, sus hábitos
+    y identidad, todo lo que eso representa. (antento a cualquier corrección)
+
+    Y la verdad me pareció algo muy interesante, incluso cuando me hablabas de combata.
+    Pero más que eso, me llamó la atención la forma en la que tú lo transmites
+    con cercanía, con seriedad, con esa pasión que se nota
+    e incluso en tu forma de ser, que también ha sido moldeada por eso.
+
+    Creo que no hubo mejor carrera para ti que la antropología,
+    y que ahora lo vas a seguir evolucionando (súper saiyajin 🔥 jajaja)
+    con tu maestría y tu nueva carrera de derecho.
+
+    Y pensando en todo eso, también recordé algo que me dijiste aquella vez que fuimos al Señor de Huanca y 
+    hablaste de confluir.
+    En ese momento no lo entendí del todo.
+    Después, conversándolo recuerdo haberte dicho que sí creía que tu carrera y la mía podían confluir.
+    
+    Aunque la antropología y la mecatrónica parezcan caminos muy distintos,
+    creo que no necesariamente lo son tanto, ya que al final, ambas buscan observar, comprender y encontrar soluciones, 
+    solo que desde lenguajes distintos.
+
+    Tal vez más adelante podamos confluir tú y yo en algún punto,
+    donde tú puedas enseñarme desde tu mirada y yo, desde la mía y poder aportar.
+
+    😄
+
+
+    
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+    
+
+    🧐
+
+
+
+
+
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+
+
+
+
+
+    🤔
+
+
+
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    😲
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    Wow que loco, si bajaste hasta aca.
+
+    Si llegaste hasta acá es porque algo te llamó la atención lo suficiente como para seguir indagando.
+    (Aunque bueno, eres antropóloga, qué tonto jajaja 😅)
+
+    
+    —-----—
+    
+
+    ♦ Siempre quise viajar al espacio para ver las estrellas de cerca.
+    Después me conformé con esperar la noche, levantar la cabeza y buscarlas en el cielo.
+
+    Pero un día, sin buscarlo, tuve frente a mí
+    algo igual o incluso más hermoso,
+    sin tener que esperar a que oscurezca.
+
+    Es una constelación que no necesita del firmamento, es
+    un pequeño universo que solo aparece
+    cuando uno realmente se detiene a mirar.
+
+    Algo que se puede recorrer con la mirada,
+    guardando historias que tal vez una vida entera
+    no alcanzaría para descifrar.
+
+    No están en el cielo, pero brillan igual. ♦
+
+    Tal vez ya lo sabes.
+
+
+    —-----—
+
+
+    Ahora voy a hablar un poco de mí y de lo que representaste en este tiempo que te conocí y de cómo me hiciste ver cosas que antes no veía.
+
+    Hay cosas que tal vez no pude entender o expresar en su momento, 
+    pero que con el tiempo creo fui comprendiendo mejor.
+
+    también hubo cosas sobre mí que me hiciste reflexionar, cosas en las que se que aun me falta crecer, 
+    pero en las que de alguna forma, me ayudaste a despertar y empezar a mejorar.
+
+    Te digo que nunca me puse a contar el tiempo, simplemente disfrutaba lo que era estar contigo. 
+    Y ya en el tiempo que estuve meditando, entendí que conocerte me hizo descubrir cosas de las cuales no sabia que podia hacer,  
+    y por esa razón contigo muchas cosas simplemente fluían y no tenía que forzar nada, 
+    solo nacían naturalmente de mi ser.
+    
+    Sé que tengo imperfecciones, como todos, pero también soy alguien que intenta crecer, 
+    valorar lo bueno y aprender a mejorar aquello que aún esta en proceso.
+
+    Me di cuenta de que una de las cosas que más valoro es la claridad.
+
+    Y entiendo que cada uno tiene sus tiempos, metas y caminos y no quiero forzar nada, menos a la distancia, 
+    pero algo que me gustaría es que, cuando nos volvamos a ver, las cosas puedan nacer de forma natural, desde lo que hemos aprendido y ojalá el tiempo permita que las cosas sigan construyéndose.
+    Ahora no tengo prisa, solo quiero respetar los tiempos y los espacios.
+
+
+    Y aun así, aunque el tiempo haya sido corto, hay cosas que se quedan más de lo que uno cree.
+
+    Y tú… preciosa, eres una de ellas. 🫣
+
+
+    Me alegra mucho que hayas logrado lo que te propusiste 
+    y de verdad te deseo lo mejor en todo lo que venga para ti.
+
+
+    Para finalizar, te digo que desde el primer día que te vi aquel domingo,
+    quiza no supe explicar completamente lo que senti, pero s i recuerdo que eso que senti fue genuino.
+    
+    
+        P.D. 1: Por cierto, elegí esta canción (Unstoppable - Sia) por lo que transmite y por el significado de su letra, siento que te representa bastante bien por lo de tu gran logro.
+
+                También pensé en (Girls Just Want To Have Fun - Cyndi Lauper), porque sé que te gusta y que te hace sentir invencible,
+                pero esta vez quise dedicarte algo que refleje más lo fuerte que eres tú.
+                Aunque también lo puedo hacer asi.
+    
+        P.D. 2: Si te preguntas por qué hice todo esto, es porque sentí que esta era una fecha muy especial e importante para ti, una de esas que no se repiten siempre, asi que dije: "¿ Y por qué no...?"
+
+                Lo voy hacer, voy a aprovecharlo para sorprenderla y dedicarle esto, porque sinceramente sentia que lo valía, y también por porque sabía que, si dejaba pasar esta opurtunidad, probablemente sería algo de lo que me arrepentiría no haberlo hecho.
+                Supongo que esta es mi manera de decirte lo mucho que me importas, y si en todo esto fui más profundo de lo que amerita la situación, disculpa, creo que simplemente me nacio hacerlo así.`;
+    popup.style.display = "block";
+}
+
+function cerrarPopup() {
+    document.getElementById("popup").style.display = "none";
+
+    const musica = document.getElementById("musica");
+
+    // 🔒 Si ya está sonando, no hacer nada
+    if (musica && !musica.paused) {
+        return;
+    }
+
+    // 🔊 Solo si estaba pausada (ej: firma)
+    if (musica) {
+        musica.volume = 0;
+        musica.play();
+
+        let volumen = 0;
+        const objetivo = 0.30;
+
+        const fadeIn = setInterval(() => {
+            volumen += 0.01;
+
+            if (volumen >= objetivo) {
+                musica.volume = objetivo;
+                clearInterval(fadeIn);
+            } else {
+                musica.volume = volumen;
+            }
+        }, 100);
+    }
+}
+
+/* =========================================
+   CONFIGURACIÓN DEL CANVAS
+========================================= */
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+/* =========================================
+   PARTÍCULAS DE FONDO
+========================================= */
+let bgParticles = [];
+let fireworks = [];
+
+for (let i = 0; i < 120; i++) {
+    bgParticles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 2,
+        dx: (Math.random() - 0.5),
+        dy: (Math.random() - 0.5)
+    });
+}
+
+/* =========================================
+   FUEGOS ARTIFICIALES
+========================================= */
+function crearExplosionRosada() {
+    let x = Math.random() * canvas.width;
+    let y = Math.random() * canvas.height * 0.6;
+
+    for (let i = 0; i < 35; i++) {
+        fireworks.push({
+            x: x,
+            y: y,
+            r: Math.random() * 3 + 1,
+            dx: (Math.random() - 0.5) * 5,
+            dy: (Math.random() - 0.5) * 5,
+            vida: 90
+        });
+    }
+}
+
+/* =========================================
+   ANIMACIÓN GENERAL
+========================================= */
+function animate() {
+    ctx.fillStyle = "rgba(0,0,0,0.2)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = "#00d9ff";
+    bgParticles.forEach(p => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fill();
+
+        p.x += p.dx;
+        p.y += p.dy;
+
+        if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
+        if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
+    });
+
+    if (fireworksActivo && Date.now() - lastFireworkTime > 450) {
+        crearExplosionRosada();
+        lastFireworkTime = Date.now();
+    }
+
+    ctx.fillStyle = "#ff4da6";
+    fireworks.forEach((f, index) => {
+        ctx.beginPath();
+        ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
+        ctx.fill();
+
+        f.x += f.dx;
+        f.y += f.dy;
+        f.vida -= 1;
+
+        if (f.vida <= 0) {
+            fireworks.splice(index, 1);
+        }
+    });
+
+    requestAnimationFrame(animate);
+}
+
+animate();
+
+/* =========================================
+   MÚSICA AUTOMÁTICA
+========================================= */
+window.addEventListener("load", () => {
+    const musica = document.getElementById("musica");
+    if (!musica) return;
+
+    musica.volume = 0;
+    musica.play().then(() => {
+        let volumen = 0;
+        const objetivo = 0.30;
+        const fade = setInterval(() => {
+            volumen += 0.01;
+            if (volumen >= objetivo) {
+                volumen = objetivo;
+                clearInterval(fade);
+            }
+            musica.volume = volumen;
+        }, 200);
+    }).catch(() => {
+        console.log("Autoplay bloqueado por el navegador.");
+    });
+});
+
+document.body.addEventListener("click", () => {
+    const musica = document.getElementById("musica");
+    if (!musica) return;
+
+    musica.volume = 0;
+    musica.play();
+
+    let volumen = 0;
+    const objetivo = 0.30;
+
+    const fade = setInterval(() => {
+        volumen += 0.01;
+        if (volumen >= objetivo) {
+            volumen = objetivo;
+            clearInterval(fade);
+        }
+        musica.volume = volumen;
+    }, 200);
+}, { once: true });
+</script>
+
+</body>
+</html>
